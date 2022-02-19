@@ -1,0 +1,80 @@
+int OnInit(){
+
+   return(INIT_SUCCEEDED);
+  }
+
+void OnDeinit(const int reason){
+
+   
+  }
+
+void OnTick(){
+
+double valorcuenta=AccountBalance();
+double precio=iClose(NULL,NULL,0);
+
+double bandaDeAbajoUltima=iBands(NULL,0,20,2,0,PRICE_CLOSE,MODE_LOWER,1);
+double bandaDeArribaUltima=iBands(NULL,0,20,2,0,PRICE_CLOSE,MODE_UPPER,1);
+
+double bandaDeAbajoAnterior=iBands(NULL,0,20,2,0,PRICE_CLOSE,MODE_LOWER,2);
+double bandaDeArribaAnterior=iBands(NULL,0,20,2,0,PRICE_CLOSE,MODE_UPPER,2);
+
+double volumen;
+
+if(Close[2]<bandaDeAbajoAnterior&&Close[1]>bandaDeAbajoUltima&&OrdersTotal()<1){
+
+               if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+   
+      int buyticket=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      ); 
+   
+  }
+  
+  
+if(Close[2]>bandaDeArribaAnterior&&Close[1]<bandaDeArribaUltima&&OrdersTotal()<1 ){
+
+               if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+     
+       int sellticket=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+     
+    }
+
+   
+  }
