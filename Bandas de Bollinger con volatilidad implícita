@@ -1,0 +1,804 @@
+string lines[];
+
+
+int OnInit(){
+
+//string lines[];
+
+   if(!FileReadArray("datos.txt",lines)){
+      Alert("ErrorXD");
+   }
+   else{
+      //Alert("=== Start ===");  
+      for(int i=0;i<ArraySize(lines);i++){
+      Alert("Esto es del onInit ",lines[i]);
+      } 
+   }
+
+   return(INIT_SUCCEEDED);
+  }
+  
+
+     bool FileReadArray(string FileName,string & Lines[]){
+   
+
+   int h=FileOpen("datos.txt",FILE_READ|FILE_ANSI|FILE_TXT);
+   if(h==INVALID_HANDLE){
+      int ErrNum=GetLastError();
+      printf("Error opening file %s # %i",FileName,ErrNum);
+      return(false);
+   }
+   int cnt=0; // use the variable to count the number of file lines
+   while(!FileIsEnding(h)){
+      string str=FileReadString(h); // read the next line from the file
+      // remove spaces to the left and to the right to detect and avoid using empty lines
+      StringTrimLeft(str); 
+      StringTrimRight(str);
+      if(str!=""){ 
+         if(cnt>=ArraySize(Lines)){ // array filled completely
+            ArrayResize(Lines,ArraySize(Lines)+1024); // increase the array size by 1024 elements
+         }
+         Lines[cnt]=str; // send the read line to the array
+         cnt++; // increase the counter of read lines
+      }
+   }
+   ArrayResize(Lines,cnt);
+   FileClose(h);
+
+   /*Alert(StrToDouble(Lines[26]));
+   if(StrToDouble(Lines[26])>1){
+      Alert("Ahi mas put que call va para abajo");
+     }
+   else{
+      Alert("Ahi mas call que put va para arriba");
+     }
+      */
+
+   return(true);
+}
+
+void OnDeinit(const int reason){
+   
+  }
+
+void OnTick(){
+
+double valorcuenta=AccountBalance();
+double precio=iClose(NULL,NULL,0);
+
+double bandaDeAbajoUltima=iBands(NULL,0,20,2,0,PRICE_CLOSE,MODE_LOWER,1);
+double bandaDeArribaUltima=iBands(NULL,0,20,2,0,PRICE_CLOSE,MODE_UPPER,1);
+
+double bandaDeAbajoAnterior=iBands(NULL,0,20,2,0,PRICE_CLOSE,MODE_LOWER,2);
+double bandaDeArribaAnterior=iBands(NULL,0,20,2,0,PRICE_CLOSE,MODE_UPPER,2);
+
+   int fecha=TimeYear(TimeCurrent());
+   
+   double volumen;
+   
+   if(fecha==2010){
+      
+      if(Close[2]<bandaDeAbajoAnterior&&Close[1]>bandaDeAbajoUltima&&OrdersTotal()<1&&StrToDouble(lines[225])<StrToDouble(lines[226])){
+      
+         if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia arriba la banda inferior y el put/call ratio es de ",StrToDouble(lines[29])," menor a 1 por eso se procede a hacer un largo");
+        Alert("Se cruzó hacia arriba la banda inferior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[226])," el de este año es: ",StrToDouble(lines[225])," por eso se procede a hacer un largo");
+
+      
+      int buyticket10=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+      
+   }
+   
+      if(Close[2]>bandaDeArribaAnterior&&Close[1]<bandaDeArribaUltima&&OrdersTotal()<1&&StrToDouble(lines[225])>StrToDouble(lines[226])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia abajo la banda superior y el put/call ratio es de ",StrToDouble(lines[29])," mayor a 1 por eso se procede a hacer un corto");
+        Alert("Se cruzó hacia abajo la banda superior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[226])," el de este año es: ",StrToDouble(lines[225])," por eso se procede a hacer un corto");
+
+      
+      int sellticket10=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+   
+  }
+      
+     }
+
+   if(fecha==2011){
+      
+      if(Close[2]<bandaDeAbajoAnterior&&Close[1]>bandaDeAbajoUltima&&OrdersTotal()<1&&StrToDouble(lines[228])<StrToDouble(lines[229])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia arriba la banda inferior y el put/call ratio es de ",StrToDouble(lines[31])," menor a 1 por eso se procede a hacer un largo");
+        Alert("Se cruzó hacia arriba la banda inferior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[229])," el de este año es: ",StrToDouble(lines[228])," por eso se procede a hacer un largo");
+
+      
+      int buyticket11=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+      
+   }
+   
+      if(Close[2]>bandaDeArribaAnterior&&Close[1]<bandaDeArribaUltima&&OrdersTotal()<1&&StrToDouble(lines[228])>StrToDouble(lines[229])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia abajo la banda superior y el put/call ratio es de ",StrToDouble(lines[31])," mayor a 1 por eso se procede a hacer un corto");
+        Alert("Se cruzó hacia abajo la banda superior y y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[229])," el de este año es: ",StrToDouble(lines[228])," por eso se procede a hacer un corto");
+
+      
+      int sellticket11=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+   
+  }
+      
+     }
+
+   if(fecha==2012){
+      
+      if(Close[2]<bandaDeAbajoAnterior&&Close[1]>bandaDeAbajoUltima&&OrdersTotal()<1&&StrToDouble(lines[231])<StrToDouble(lines[232])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia arriba la banda inferior y el put/call ratio es de ",StrToDouble(lines[33])," menor a 1 por eso se procede a hacer un largo");
+        Alert("Se cruzó hacia arriba la banda inferior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[232])," el de este año es: ",StrToDouble(lines[231])," por eso se procede a hacer un largo");
+
+      
+      int buyticket12=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+      
+   }
+   
+      if(Close[2]>bandaDeArribaAnterior&&Close[1]<bandaDeArribaUltima&&OrdersTotal()<1&&StrToDouble(lines[231])>StrToDouble(lines[232])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia abajo la banda superior y el put/call ratio es de ",StrToDouble(lines[33])," mayor a 1 por eso se procede a hacer un corto");
+        Alert("Se cruzó hacia abajo la banda superior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[232])," el de este año es: ",StrToDouble(lines[231])," por eso se procede a hacer un corto");
+
+      
+      int sellticket12=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+   
+  }
+      
+     }
+
+   if(fecha==2013){
+      
+      if(Close[2]<bandaDeAbajoAnterior&&Close[1]>bandaDeAbajoUltima&&OrdersTotal()<1&&StrToDouble(lines[234])<StrToDouble(lines[235])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia arriba la banda inferior y el put/call ratio es de ",StrToDouble(lines[35])," menor a 1 por eso se procede a hacer un largo");
+        Alert("Se cruzó hacia arriba la banda inferior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[235])," el de este año es: ",StrToDouble(lines[234])," por eso se procede a hacer un largo");
+
+      
+      int buyticket13=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+      
+   }
+   
+      if(Close[2]>bandaDeArribaAnterior&&Close[1]<bandaDeArribaUltima&&OrdersTotal()<1&&StrToDouble(lines[234])>StrToDouble(lines[235])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia abajo la banda superior y el put/call ratio es de ",StrToDouble(lines[35])," mayor a 1 por eso se procede a hacer un corto");
+        Alert("Se cruzó hacia abajo la banda superior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[235])," el de este año es: ",StrToDouble(lines[234])," por eso se procede a hacer un corto");
+
+      
+      int sellticket13=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+   
+  }
+  }
+
+   if(fecha==2014){
+      
+      if(Close[2]<bandaDeAbajoAnterior&&Close[1]>bandaDeAbajoUltima&&OrdersTotal()<1&&StrToDouble(lines[237])<StrToDouble(lines[238])){
+      
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia arriba la banda inferior y el put/call ratio es de ",StrToDouble(lines[37])," menor a 1 por eso se procede a hacer un largo");
+        Alert("Se cruzó hacia arriba la banda inferior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[238])," el de este año es: ",StrToDouble(lines[237])," por eso se procede a hacer un largo");
+
+      
+      int buyticket14=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+      
+   }
+   
+      if(Close[2]>bandaDeArribaAnterior&&Close[1]<bandaDeArribaUltima&&OrdersTotal()<1&&StrToDouble(lines[237])>StrToDouble(lines[238])){
+      
+      
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+     //Alert("Se cruzó hacia abajo la banda superior y el put/call ratio es de ",StrToDouble(lines[37])," mayor a 1 por eso se procede a hacer un corto");
+       Alert("Se cruzó hacia abajo la banda superior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[238])," el de este año es: ",StrToDouble(lines[237])," por eso se procede a hacer un corto");
+
+      
+      int sellticket14=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+   
+  }
+  }
+
+   if(fecha==2015){
+      
+      if(Close[2]<bandaDeAbajoAnterior&&Close[1]>bandaDeAbajoUltima&&OrdersTotal()<1&&StrToDouble(lines[240])<StrToDouble(lines[241])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia arriba la banda inferior y el put/call ratio es de ",StrToDouble(lines[39])," menor a 1 por eso se procede a hacer un largo");
+        Alert("Se cruzó hacia arriba la banda inferior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[241])," el de este año es: ",StrToDouble(lines[240])," por eso se procede a hacer un largo");
+
+      
+      int buyticket15=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+      
+   }
+   
+      if(Close[2]>bandaDeArribaAnterior&&Close[1]<bandaDeArribaUltima&&OrdersTotal()<1&&StrToDouble(lines[240])>StrToDouble(lines[241])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia abajo la banda superior y el put/call ratio es de ",StrToDouble(lines[39])," mayor a 1 por eso se procede a hacer un corto");
+        Alert("Se cruzó hacia abajo la banda superior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[241])," el de este año es: ",StrToDouble(lines[240])," por eso se procede a hacer un corto");
+
+      
+      int sellticket15=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+   
+  }
+  }
+
+   if(fecha==2016){
+      
+      if(Close[2]<bandaDeAbajoAnterior&&Close[1]>bandaDeAbajoUltima&&OrdersTotal()<1&&StrToDouble(lines[243])<StrToDouble(lines[244])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia arriba la banda inferior y el put/call ratio es de ",StrToDouble(lines[41])," menor a 1 por eso se procede a hacer un largo");
+        Alert("Se cruzó hacia arriba la banda inferior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[244])," el de este año es: ",StrToDouble(lines[243])," por eso se procede a hacer un largo");
+
+      
+      int buyticket16=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+      
+   }
+   
+      if(Close[2]>bandaDeArribaAnterior&&Close[1]<bandaDeArribaUltima&&OrdersTotal()<1&&StrToDouble(lines[243])>StrToDouble(lines[244])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia abajo la banda superior y el put/call ratio es de ",StrToDouble(lines[41])," mayor a 1 por eso se procede a hacer un corto");
+        Alert("Se cruzó hacia abajo la banda superior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[244])," el de este año es: ",StrToDouble(lines[243])," por eso se procede a hacer un corto");
+
+      
+      int sellticket16=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+   
+  }
+  }
+
+   if(fecha==2017){
+      
+      if(Close[2]<bandaDeAbajoAnterior&&Close[1]>bandaDeAbajoUltima&&OrdersTotal()<1&&StrToDouble(lines[246])<StrToDouble(lines[247])){
+      
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia arriba la banda inferior y el put/call ratio es de ",StrToDouble(lines[43])," menor a 1 por eso se procede a hacer un largo");
+        Alert("Se cruzó hacia arriba la banda inferior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[247])," el de este año es: ",StrToDouble(lines[246])," por eso se procede a hacer un largo");
+
+      
+      int buyticket17=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+      
+   }
+   
+      if(Close[2]>bandaDeArribaAnterior&&Close[1]<bandaDeArribaUltima&&OrdersTotal()<1&&StrToDouble(lines[246])>StrToDouble(lines[247])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia abajo la banda superior y el put/call ratio es de ",StrToDouble(lines[43])," mayor a 1 por eso se procede a hacer un corto");
+        Alert("Se cruzó hacia abajo la banda superior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[247])," el de este año es: ",StrToDouble(lines[246])," por eso se procede a hacer un corto");
+
+      
+      int sellticket17=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+   
+  }
+  }
+
+
+   if(fecha==2018){
+      
+      if(Close[2]<bandaDeAbajoAnterior&&Close[1]>bandaDeAbajoUltima&&OrdersTotal()<1&&StrToDouble(lines[249])<StrToDouble(lines[250])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+     // Alert("Se cruzó hacia arriba la banda inferior y el put/call ratio es de ",StrToDouble(lines[45])," menor a 1 por eso se procede a hacer un largo");
+        Alert("Se cruzó hacia arriba la banda inferior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[250])," el de este año es: ",StrToDouble(lines[249])," por eso se procede a hacer un largo");
+
+      
+      int buyticket18=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+      
+   }
+   
+      if(Close[2]>bandaDeArribaAnterior&&Close[1]<bandaDeArribaUltima&&OrdersTotal()<1&&StrToDouble(lines[249])>StrToDouble(lines[250])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia abajo la banda superior y el put/call ratio es de ",StrToDouble(lines[45])," mayor a 1 por eso se procede a hacer un corto");
+        Alert("Se cruzó hacia abajo la banda superior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[250])," el de este año es: ",StrToDouble(lines[249])," por eso se procede a hacer un corto");
+
+      
+      int sellticket18=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+   
+  }
+  }
+
+   if(fecha==2019){
+      
+      if(Close[2]<bandaDeAbajoAnterior&&Close[1]>bandaDeAbajoUltima&&OrdersTotal()<1&&StrToDouble(lines[252])<StrToDouble(lines[253])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia arriba la banda inferior y el put/call ratio es de ",StrToDouble(lines[47])," menor a 1 por eso se procede a hacer un largo");
+        Alert("Se cruzó hacia arriba la banda inferior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[253])," el de este año es: ",StrToDouble(lines[252])," por eso se procede a hacer un largo");
+
+      
+      int buyticket19=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+      
+   }
+   
+      if(Close[2]>bandaDeArribaAnterior&&Close[1]<bandaDeArribaUltima&&OrdersTotal()<1&&StrToDouble(lines[252])>StrToDouble(lines[253])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia abajo la banda superior y el put/call ratio es de ",StrToDouble(lines[47])," mayor a 1 por eso se procede a hacer un corto");
+        Alert("Se cruzó hacia abajo la banda superior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[253])," el de este año es: ",StrToDouble(lines[252])," por eso se procede a hacer un corto");
+
+      
+      int sellticket19=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+   
+  }
+  }
+
+   if(fecha==2020){
+      
+      if(Close[2]<bandaDeAbajoAnterior&&Close[1]>bandaDeAbajoUltima&&OrdersTotal()<1&&StrToDouble(lines[255])<StrToDouble(lines[256])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+      //Alert("Se cruzó hacia arriba la banda inferior y el put/call ratio es de ",StrToDouble(lines[49])," menor a 1 por eso se procede a hacer un largo");
+        Alert("Se cruzó hacia arriba la banda inferior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[256])," el de este año es: ",StrToDouble(lines[255])," por eso se procede a hacer un largo");
+
+      
+      int buyticket20=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+      
+   }
+   
+      if(Close[2]>bandaDeArribaAnterior&&Close[1]<bandaDeArribaUltima&&OrdersTotal()<1&&StrToDouble(lines[255])>StrToDouble(lines[256])){
+      
+                     if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      
+     //Alert("Se cruzó hacia abajo la banda superior y el put/call ratio es de ",StrToDouble(lines[49])," mayor a 1 por eso se procede a hacer un corto");
+       Alert("Se cruzó hacia abajo la banda superior y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[256])," el de este año es: ",StrToDouble(lines[255])," por eso se procede a hacer un corto");
+
+      
+      int sellticket20=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+   
+  }
+  }
+   
+   
+   
+  }
