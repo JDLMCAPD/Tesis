@@ -1,0 +1,84 @@
+int OnInit(){
+
+   return(INIT_SUCCEEDED);
+  }
+
+void OnDeinit(const int reason){
+
+   
+  }
+
+void OnTick(){
+
+double valorcuenta=AccountBalance();
+double precio=iClose(NULL,NULL,0);
+double medialentaultimo= iMA(NULL,0,200,0,MODE_SMA,PRICE_CLOSE,0);
+double medialentaanterior= iMA(NULL,0,200,0,MODE_SMA,PRICE_CLOSE,1);
+double mediarapidaultimo= iMA(NULL,0,20,0,MODE_SMA,PRICE_CLOSE,0);
+double mediarapidaanterior= iMA(NULL,0,20,0,MODE_SMA,PRICE_CLOSE,1);
+double volumen;
+
+if(mediarapidaanterior<medialentaanterior&&mediarapidaultimo>medialentaultimo&&OrdersTotal()<1){
+ Alert("La media rapida corto hacia arriba a la media lenta y por eso se hace un largo");
+ 
+        if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+        
+ Alert("El volumen que se va a comprar es de: ",volumen);
+ 
+      int buyticket=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      ); 
+   
+  }
+  
+  
+  if(mediarapidaanterior>medialentaanterior&&mediarapidaultimo<medialentaultimo&&OrdersTotal()<1){
+ Alert("La media rapida corto hacia abajo a la media lenta y por eso se hace un corto");
+ 
+         if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+        
+  Alert("El volumen que se va a vender es de: ",volumen);
+ 
+      int sellticket=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      ); 
+   
+  }
+   
+   
+   
+  }
