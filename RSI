@@ -1,0 +1,79 @@
+int OnInit(){
+
+   return(INIT_SUCCEEDED);
+  }
+
+void OnDeinit(const int reason){
+
+   
+  }
+
+void OnTick(){
+
+double valorcuenta=AccountBalance();
+double precio=iClose(NULL,NULL,0);
+double valorRsi= iRSI(NULL,0,14,PRICE_CLOSE,0);
+double volumen;
+
+
+
+if(valorRsi<30&&OrdersTotal()<1){
+
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+       if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+ 
+       int buyticket=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      ); 
+   
+  }
+  
+  if(valorRsi>70&&OrdersTotal()<1){
+  
+  
+         if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+        
+         if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+         
+  int sellticket=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+  
+  
+  }
+  
+  
+  
+  
+  }
