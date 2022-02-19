@@ -1,0 +1,623 @@
+string lines[];
+int OnInit(){
+   if(!FileReadArray("datos.txt",lines)){
+      Alert("Error");
+   }
+   else{
+      //Alert("=== Start ===");  
+      for(int i=0;i<ArraySize(lines);i++){
+      Alert("Esto es del onInit ",lines[i]);
+      } 
+   }
+   return(INIT_SUCCEEDED);
+  }
+     bool FileReadArray(string FileName,string & Lines[]){
+   int h=FileOpen("datos.txt",FILE_READ|FILE_ANSI|FILE_TXT);
+   if(h==INVALID_HANDLE){
+      int ErrNum=GetLastError();
+      printf("Error opening file %s # %i",FileName,ErrNum);
+      return(false);
+   }
+   int cnt=0; 
+   while(!FileIsEnding(h)){
+      string str=FileReadString(h); 
+      StringTrimLeft(str); 
+      StringTrimRight(str);
+      if(str!=""){ 
+         if(cnt>=ArraySize(Lines)){ 
+            ArrayResize(Lines,ArraySize(Lines)+1024); 
+         }
+         Lines[cnt]=str;
+         cnt++;
+      }
+   }
+   ArrayResize(Lines,cnt);
+   FileClose(h);
+   return(true);
+}
+void OnDeinit(const int reason){
+  }
+void OnTick(){
+double valorcuenta=AccountBalance();
+double precio=iClose(NULL,NULL,0);
+double valorRsi= iRSI(NULL,0,14,PRICE_CLOSE,0);
+double volumen;
+   int fecha=TimeYear(TimeCurrent());
+   if(fecha==2010){
+   if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])<1){
+      //if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])<StrToDouble(lines[226])){
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," menor a 1 por eso se procede a hacer un largo");
+         if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+         }
+         if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+         }
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[226])," el de este año es: ",StrToDouble(lines[225])," por eso se procede a hacer un largo");
+      int buyticket10=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+   }
+   if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])>1){
+      //if(valorRsi>70&&OrdersTotal()<1&&StrToDouble(lines[225])>StrToDouble(lines[226])){
+         if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+         }
+         if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+         }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," mayor a 1 por eso se procede a hacer un corto");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[226])," el de este año es: ",StrToDouble(lines[225])," por eso se procede a hacer un corto");
+      int sellticket10=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+  }
+     }
+   if(fecha==2011){
+           if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+         }
+           if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+         }
+      if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])<1){
+     // if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[228])<StrToDouble(lines[229])){
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," menor a 1 por eso se procede a hacer un largo");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[229])," el de este año es: ",StrToDouble(lines[228])," por eso se procede a hacer un largo");
+      int buyticket11=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+   }
+   if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])>1){
+      //if(valorRsi>70&&OrdersTotal()<1&&StrToDouble(lines[228])>StrToDouble(lines[229])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+         }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+         }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," mayor a 1 por eso se procede a hacer un corto");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[229])," el de este año es: ",StrToDouble(lines[228])," por eso se procede a hacer un corto");
+      int sellticket11=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+  }
+     }
+   if(fecha==2012){
+      if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])<1){
+      //if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[231])<StrToDouble(lines[232])){
+      
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," menor a 1 por eso se procede a hacer un largo");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[232])," el de este año es: ",StrToDouble(lines[231])," por eso se procede a hacer un largo");
+      int buyticket12=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+   }
+   if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])>1){
+      //if(valorRsi>70&&OrdersTotal()<1&&StrToDouble(lines[231])>StrToDouble(lines[232])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+       Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," mayor a 1 por eso se procede a hacer un corto");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[232])," el de este año es: ",StrToDouble(lines[231])," por eso se procede a hacer un corto");
+      int sellticket12=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+  }
+     }
+
+   if(fecha==2013){
+      if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])<1){
+      //if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[234])<StrToDouble(lines[235])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+            if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }      
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," menor a 1 por eso se procede a hacer un largo");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[235])," el de este año es: ",StrToDouble(lines[234])," por eso se procede a hacer un largo");
+      int buyticket13=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+   }
+   if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])>1){
+      //if(valorRsi>70&&OrdersTotal()<1&&StrToDouble(lines[234])>StrToDouble(lines[235])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+            if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," mayor a 1 por eso se procede a hacer un corto");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[235])," el de este año es: ",StrToDouble(lines[234])," por eso se procede a hacer un corto");
+      int sellticket13=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+  }
+  }
+
+   if(fecha==2014){
+      if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])<1){
+      //if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[237])<StrToDouble(lines[238])){
+            if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+            if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," menor a 1 por eso se procede a hacer un largo");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[238])," el de este año es: ",StrToDouble(lines[237])," por eso se procede a hacer un largo");
+      
+      int buyticket14=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+   }
+   if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])>1){
+      //if(valorRsi>70&&OrdersTotal()<1&&StrToDouble(lines[237])>StrToDouble(lines[238])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," mayor a 1 por eso se procede a hacer un corto");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[238])," el de este año es: ",StrToDouble(lines[237])," por eso se procede a hacer un corto");
+      int sellticket14=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+  }
+  }
+   if(fecha==2015){
+      if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])<1){
+      //if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[240])<StrToDouble(lines[241])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," menor a 1 por eso se procede a hacer un largo");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[241])," el de este año es: ",StrToDouble(lines[240])," por eso se procede a hacer un largo");
+      int buyticket15=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+   }
+   if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])>1){
+   //   if(valorRsi>70&&OrdersTotal()<1&&StrToDouble(lines[240])>StrToDouble(lines[241])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," mayor a 1 por eso se procede a hacer un corto");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[241])," el de este año es: ",StrToDouble(lines[240])," por eso se procede a hacer un corto");
+      int sellticket15=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+  }
+  }
+   if(fecha==2016){
+      if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])<1){
+      //if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[243])<StrToDouble(lines[244])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," menor a 1 por eso se procede a hacer un largo");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[244])," el de este año es: ",StrToDouble(lines[243])," por eso se procede a hacer un largo");
+      int buyticket16=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+   }
+   if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])>1){
+   //   if(valorRsi>70&&OrdersTotal()<1&&StrToDouble(lines[243])>StrToDouble(lines[244])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," mayor a 1 por eso se procede a hacer un corto");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[244])," el de este año es: ",StrToDouble(lines[243])," por eso se procede a hacer un corto");
+      int sellticket16=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+  }
+  }
+   if(fecha==2017){
+      if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])<1){
+      //if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[246])<StrToDouble(lines[247])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," menor a 1 por eso se procede a hacer un largo");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[247])," el de este año es: ",StrToDouble(lines[246])," por eso se procede a hacer un largo");
+      int buyticket17=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+   }
+   if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])>1){
+   //   if(valorRsi>70&&OrdersTotal()<1&&StrToDouble(lines[246])>StrToDouble(lines[247])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," mayor a 1 por eso se procede a hacer un corto");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[247])," el de este año es: ",StrToDouble(lines[246])," por eso se procede a hacer un corto");
+      int sellticket17=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+  }
+  }
+   if(fecha==2018){
+      if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])<1){
+      //if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[249])<StrToDouble(lines[250])){
+      
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," menor a 1 por eso se procede a hacer un largo");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[250])," el de este año es: ",StrToDouble(lines[249])," por eso se procede a hacer un largo");
+      int buyticket18=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+   }
+   if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])>1){
+   //   if(valorRsi>70&&OrdersTotal()<1&&StrToDouble(lines[249])>StrToDouble(lines[250])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," mayor a 1 por eso se procede a hacer un corto");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[250])," el de este año es: ",StrToDouble(lines[249])," por eso se procede a hacer un corto");
+      int sellticket18=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+  }
+  }
+   if(fecha==2019){
+      if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])<1){
+      //if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[252])<StrToDouble(lines[253])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," menor a 1 por eso se procede a hacer un largo");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[253])," el de este año es: ",StrToDouble(lines[252])," por eso se procede a hacer un largo");
+      int buyticket19=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+   }
+   if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])>1){
+   //   if(valorRsi>70&&OrdersTotal()<1&&StrToDouble(lines[252])>StrToDouble(lines[253])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," mayor a 1 por eso se procede a hacer un corto");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[253])," el de este año es: ",StrToDouble(lines[252])," por eso se procede a hacer un corto");
+      int sellticket19=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+  }
+  }
+   if(fecha==2020){
+      if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])<1){
+      //if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[255])<StrToDouble(lines[256])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," menor a 1 por eso se procede a hacer un largo");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[256])," el de este año es: ",StrToDouble(lines[255])," por eso se procede a hacer un largo");
+      int buyticket20=OrderSend
+      (
+      Symbol(),
+      OP_BUY,
+      volumen,
+      Ask,
+      0,
+      Ask-10000*_Point,
+      Ask+10000*_Point,
+      NULL,
+      0,
+      0,
+      Green
+      );
+   }
+   if(valorRsi<30&&OrdersTotal()<1&&StrToDouble(lines[225])>1){
+   //   if(valorRsi>70&&OrdersTotal()<1&&StrToDouble(lines[255])>StrToDouble(lines[256])){
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)<0.01){
+         volumen=0.01;
+        }
+             if(NormalizeDouble((valorcuenta*0.10)/(precio*100),2)>=0.01){
+         volumen=NormalizeDouble((valorcuenta*0.10)/(precio*100),2);
+        }
+      Alert("El RSI es de ",valorRsi,"y el put/call ratio es de ",StrToDouble(lines[29])," mayor a 1 por eso se procede a hacer un corto");
+      //Alert("El RSI es de ",valorRsi,"y el promedio de la volatilidad implicita de años anteriores es de: ",StrToDouble(lines[256])," el de este año es: ",StrToDouble(lines[255])," por eso se procede a hacer un corto");
+      int sellticket20=OrderSend
+      (
+      Symbol(),
+      OP_SELL,
+      volumen,
+      Bid,
+      0,
+      Bid+10000*_Point,
+      Bid-10000*_Point,
+      NULL,
+      0,
+      0,
+      Red
+      );
+  }
+  }
+ }
